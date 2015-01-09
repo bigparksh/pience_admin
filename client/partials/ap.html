@@ -1,0 +1,23 @@
+<div class="container" ng-controller="ApCtrl">
+<div class="row col-md-12">
+<div>
+<input type="text" class="form-control input-lg" placeholder="Enter a Ap" ng-keypress="save($event)" ng-model="apInput">
+</div>
+</div>
+<div class="row col-md-12 aps">
+<div class="alert alert-info text-center" ng-hide="aps.length > 0">
+<h3>No Aps yet!</h3>
+</div>
+<div ng-repeat="ap in aps" class="ap col-md-12 col-sm-12 col-xs-12">
+<div class="col-md-8 col-sm-8 col-xs-8">
+<span ng-show="!isEditable[$index]">{{ap.ssid}}</span>
+<input ng-show="isEditable[$index]" type="text" value="{{ap.ssid}}" ng-keypress="edit($event,$index);">
+<input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
+</div>
+<div class="col-md-3 col-sm-3 col-xs-3">
+<input type="button" class="btn btn-info" ng-disabled="ap.isCompleted" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
+<input type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
+</div>
+</div>
+</div>
+</div>
