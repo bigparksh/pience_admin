@@ -7,31 +7,40 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	});
 	// Save a Ap to the server
 	$scope.save = function($event) {
-		if ($event.which == 13 && $scope.apInput) {
+		if ($scope.ssid && $scope.password && $scope.address) {
 			apsFactory.saveAp({
-				"ssid": $scope.apInput,
+				"ssid": $scope.ssid,
+				"password": $scope.password,
+				"address": $scope.address
 			}).then(function(data) {
 				$scope.aps.push(data.data);
 			});
+			$scope.ssid= null;
+			$scope.password = null; 
+			$scope.address = null; 
 			$scope.apInput = '';
+		} else {
+			alert('Please put valid value');
 		}
 	};
 	// Update the edited Ap
 	$scope.edit = function($event, i) {
-		if ($event.which == 13 && $event.target.value.trim()) {
 			var _t = $scope.aps[i];
 			apsFactory.updateAp({
 				_id: _t._id,
-				ssid: $event.target.value.trim(),
+				ssid: $scope.aps[i].ssid,
+				password: $scope.aps[i].password,
+				address: $scope.aps[i].address
 			}).then(function(data) {
 				if (data.data.updatedExisting) {
-					_t.ssid = $event.target.value.trim();
+					_t.ssid = $scope.aps[i].ssid,
+					_t.password = $scope.aps[i].password,
+					_t.address = $scope.aps[i].address
 					$scope.isEditable[i] = false;
 				} else {
 					alert('Oops something went wrong!');
 				}
 			});
-		}
 	};
 	// Delete a Ap
 	$scope.delete = function(i) {
