@@ -3,17 +3,17 @@
  'use strict';
  var express = require('express');
  var router = express.Router();
- var client = require('request');
+ var client = require('http');
  var options = {
 	hostname: 'http://www.noserv.com',
 	path: '/1/classes/aps',	
 	port: 2337,
+	method: 'GET',
 	headers: {
 		"X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor", 
 		"X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9"
 		}
 	};	
- var app = express();
 
  /* GET home page. */
  router.get('/', function(req, res) {
@@ -21,20 +21,20 @@
  });
 
  router.get('/api/aps', function(req, res) {
-	client.get(options, function(error, response, result) {
-					console.log(response.statusCode);
+	client.get(options, function(result) {
 					result.setEncoding('utf8');
 					result.on('data', function(chunk) {
 						console.log(chunk);
 						res.json(chunk);
 					});
 		});
+
  });
 
  router.post('/api/aps', function(req, res) {
-		client.post(options, JSON.parse(req.body), function(result) {
+		/*client.post(options, JSON.parse(req.body), function(result) {
 			done();
-		});
+		});*/
 	});
 
  router.put('/api/aps', function(req, res) {
