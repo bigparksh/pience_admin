@@ -14,6 +14,7 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 				"address": $scope.address
 			}).then(function(data) {
 				$scope.aps.push(data.data);
+				alert(data);
 			});
 			$scope.ssid= null;
 			$scope.password = null; 
