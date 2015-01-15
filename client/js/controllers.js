@@ -2,8 +2,8 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	$scope.aps = [];
 	$scope.isEditable = [];
 	// get all Aps on Load
-	apsFactory.getAp().then(function(data) {
-		$scope.aps = data.data;
+	apsFactory.getAp().then(function(res) {
+		$scope.aps = JSON.parse(res.data).results;
 	});
 	// Save a Ap to the server
 	$scope.save = function($event) {
@@ -33,10 +33,10 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 				address: $scope.aps[i].address
 			}).then(function(data) {
 				if (data.data.updatedExisting) {
-					_t.ssid = $scope.aps[i].ssid,
-					_t.password = $scope.aps[i].password,
-					_t.address = $scope.aps[i].address
 					$scope.isEditable[i] = false;
+					_t.ssid = $scope.aps[i].ssid;
+					_t.password = $scope.aps[i].password;
+					_t.address = $scope.aps[i].address;
 				} else {
 					alert('Oops something went wrong!');
 				}

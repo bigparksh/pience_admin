@@ -3,7 +3,8 @@ admin.factory('apsFactory', function($http) {
 	var _apService = {};
 
 	_apService.getAp = function() {
-			return $http.get(urlBase);
+			result = $http.get(urlBase);
+			return result;
 	};
 
 	_apService.saveAp = function(ap) {
