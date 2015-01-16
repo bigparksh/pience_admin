@@ -1,15 +1,18 @@
 <div class="container" ng-controller="ApCtrl">
 <div class="row col-md-12">
 <div class="col-md-2 col-sm-2 col-xs-2">
-<input type="text" class="form-control input-md" placeholder="Enter a Ap" ng-model="ssid">
+<input type="text" class="form-control input-md" placeholder="Enter a SSID" ng-model="ssid">
 </div>
 <div class="col-md-3 col-sm-3 col-xs-3">
+<input type="text" class="form-control input-md" placeholder="Enter a BSSID" ng-model="bssid">
+</div>
+<div class="col-md-2 col-sm-2 col-xs-2">
 <input type="text" class="form-control input-md" placeholder="Enter a Ap password" ng-model="password" >
 </div>
-<div class="col-md-4 col-sm-4 col-xs-4">
+<div class="col-md-3 col-sm-3 col-xs-3">
 <input type="text" class="form-control input-md" placeholder="Enter a Ap address" ng-model="address" >
 </div>
-<div class="col-md-3 col-sm-3 col-xs-3 pull-right">
+<div class="col-md-2 col-sm-2 col-xs-2 pull-right">
 <input type="button" class="btn btn-info" value="Save" ng-click="save($event)">
 </div>
 </div>
@@ -23,18 +26,22 @@
 <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.ssid}}" ng-model="ap.ssid">
 </div>
 <div class="col-md-3 col-sm-3 col-xs-3">
+<span ng-show="!isEditable[$index]">{{ap.bssid}}</span> 
+<input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.bssid}}" ng-model="ap.bssid">
+</div>
+<div class="col-md-2 col-sm-2 col-xs-2">
 <span ng-show="!isEditable[$index]">{{ap.password}}</span>
 <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.password}}" ng-model="ap.password">
 </div>
-<div class="col-md-4 col-sm-4 col-xs-4">
+<div class="col-md-3 col-sm-3 col-xs-3">
 <span ng-show="!isEditable[$index]">{{ap.address}}</span>
 <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.address}}" ng-model="ap.address">
 </div>
-<div class="col-md-3 col-sm-3 col-xs-3 pull-right">
+<div class="col-md-2 col-sm-2 col-xs-2 pull-right">
 <input ng-show="isEditable[$index]" type="button" class="btn btn-danger" value="Update" ng-click="edit($event, $index);">
 <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
 </div>
-<div class="col-md-3 col-sm-3 col-xs-3">
+<div class="col-md-2 col-sm-2 col-xs-2">
 <input ng-show="!isEditable[$index]" type="button" class="btn btn-info" ng-disabled="ap.isCompleted" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
 <input ng-show="!isEditable[$index]" type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
 </div>

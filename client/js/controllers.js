@@ -10,12 +10,15 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 		if ($scope.ssid && $scope.password && $scope.address) {
 			apsFactory.saveAp({
 				"ssid": $scope.ssid,
+				"bssid": $scope.bssid,
 				"password": $scope.password,
-				"address": $scope.address
+				"address": $scope.address,
+				"objectId": $scope.objectId
 			}).then(function(res) {
 				$scope.aps = JSON.parse(res.data).results;
 			});
 			$scope.ssid= null;
+			$scope.bssid= null;
 			$scope.password = null; 
 			$scope.address = null; 
 			$scope.apInput = '';
@@ -27,24 +30,26 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	$scope.edit = function($event, i) {
 			var _t = $scope.aps[i];
 			apsFactory.updateAp({
-				_id: _t._id,
+				objectId: $scope.aps[i].objectId,
 				ssid: $scope.aps[i].ssid,
+				bssid: $scope.aps[i].bssid,
 				password: $scope.aps[i].password,
 				address: $scope.aps[i].address
 			}).then(function(data) {
-				if (data.data.updatedExisting) {
-					$scope.isEditable[i] = false;
-					_t.ssid = $scope.aps[i].ssid;
-					_t.password = $scope.aps[i].password;
-					_t.address = $scope.aps[i].address;
-				} else {
-					alert('Oops something went wrong!');
-				}
+					if (data.data == "success") {
+						$scope.isEditable[i] = false;
+						_t.ssid = $scope.aps[i].ssid;
+						_t.bssid = $scope.aps[i].bssid;
+						_t.password = $scope.aps[i].password;
+						_t.address = $scope.aps[i].address;
+					} else {
+						alert("something goes wrong!");
+					}
 			});
 	};
 	// Delete a Ap
 	$scope.delete = function(i) {
-		apsFactory.deleteAp($scope.aps[i]._id).then(function(data) {
+		apsFactory.deleteAp($scope.aps[i].objectId).then(function(data) {
 			if (data.data) {
 				$scope.aps.splice(i, 1);
 			}

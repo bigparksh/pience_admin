@@ -69,25 +69,49 @@
 	
 
  router.put('/api/aps', function(req, res) {
-/*
-		db.aps.update({
-			_id: mongojs.ObjectId(req.body._id)
-		}, {
-			ssid: req.body.ssid,
-			password: req.body.password,
-			address: req.body.address
-		}, {}, function(err, data) {
-			res.json(data);
-		});  */
+	var put_body = JSON.stringify(req.body);
+	var put_options = {
+		hostname: 'http://www.noserv.com',
+		path: '/1/classes/aps/' + req.body.objectId,
+		port: 2337,
+		method: 'PUT',
+		headers: {
+			"X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor", 
+			"X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9",
+			"Content-Type": "application/json",
+			"Content-Length": Buffer.byteLength(put_body)
+			}
+		};
+		var put_req = client.request(put_options, function(result) {
+				result.on('data', function() {
+					if (result.statusCode == "200")
+						res.json("success");
+					else
+						res.json("fail");
+				});
+		});
+
+		put_req.write(put_body);
+		put_req.end();
 	});
 
 	router.delete('/api/aps/:_id', function(req, res) {
-/*
-		db.aps.remove({
-			_id: mongojs.ObjectId(req.params._id)
-		}, '', function(err, data) {
-			res.json(data);
-		}); */
+	console.log(req.params._id);
+	var delete_options = {
+		hostname: 'http://www.noserv.com',
+		path: '/1/classes/aps/' + req.params._id,	
+		port: 2337,
+		method: 'DELETE',
+		headers: {
+			"X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor", 
+			"X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9",
+			"Content-Type": "application/json"
+			}
+		};
+	
+	var delete_req = client.request(delete_options);
+ 	delete_req.end();
+	res.json("success");
 	});
 	module.exports = router;
 
