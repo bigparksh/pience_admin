@@ -50,8 +50,20 @@
 
 	console.log(post_data);
 	var post_req = client.request(post_options);
-	//post_req.write(post_data);
 	post_req.end();
+	
+	var buffer = '';
+	client.get(options, function(result) {
+					result.setEncoding('utf8');
+					result.on('data', function(chunk) {
+						buffer += chunk.toString();	
+					});
+					result.on('end', function() {
+						console.log("result!!!!"); 
+						console.log(buffer);
+						res.json(buffer);
+					});
+		});
 
 	});
 	

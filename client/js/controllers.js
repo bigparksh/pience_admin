@@ -12,9 +12,8 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 				"ssid": $scope.ssid,
 				"password": $scope.password,
 				"address": $scope.address
-			}).then(function(data) {
-				$scope.aps.push(data.data);
-				alert(data);
+			}).then(function(res) {
+				$scope.aps = JSON.parse(res.data).results;
 			});
 			$scope.ssid= null;
 			$scope.password = null; 
