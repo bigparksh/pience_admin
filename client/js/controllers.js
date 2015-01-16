@@ -49,10 +49,8 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	};
 	// Delete a Ap
 	$scope.delete = function(i) {
-		apsFactory.deleteAp($scope.aps[i].objectId).then(function(data) {
-			if (data.data) {
-				$scope.aps.splice(i, 1);
-			}
+		apsFactory.deleteAp($scope.aps[i].objectId).then(function(res) {
+        $scope.aps = JSON.parse(res.data).results;
 		});
 	};
 });
