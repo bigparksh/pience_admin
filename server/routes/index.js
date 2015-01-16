@@ -38,7 +38,7 @@
  router.post('/api/aps', function(req, res) {
 	var post_data = querystring.stringify(req.body);
 	var post_options = {
-		hostname: 'http://www.noserv.com',
+		hostname: 'www.noserv.com',
 		path: '/1/classes/aps?' + post_data,	
 		port: 2337,
 		method: 'POST',
@@ -71,7 +71,7 @@
  router.put('/api/aps', function(req, res) {
 	var put_body = JSON.stringify(req.body);
 	var put_options = {
-		hostname: 'http://www.noserv.com',
+		hostname: 'www.noserv.com',
 		path: '/1/classes/aps/' + req.body.objectId,
 		port: 2337,
 		method: 'PUT',
@@ -98,7 +98,7 @@
 	router.delete('/api/aps/:_id', function(req, res) {
 	console.log(req.params._id);
 	var delete_options = {
-		hostname: 'http://www.noserv.com',
+		hostname: 'www.noserv.com',
 		path: '/1/classes/aps/' + req.params._id,	
 		port: 2337,
 		method: 'DELETE',
