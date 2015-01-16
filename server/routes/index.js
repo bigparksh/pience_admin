@@ -21,26 +21,31 @@
  });
 
  router.get('/api/aps', function(req, res) {
+	var buffer = '';
 	client.get(options, function(result) {
 					result.setEncoding('utf8');
 					result.on('data', function(chunk) {
-						console.log(chunk);
-						res.json(chunk);
+						buffer += chunk.toString();	
+					});
+					result.on('end', function() {
+						console.log("result!!!!"); 
+						console.log(buffer);
+						res.json(buffer);
 					});
 		});
  });
 
  router.post('/api/aps', function(req, res) {
-var post_data = querystring.stringify(req.body);
-var post_options = {
-	hostname: 'http://www.noserv.com',
-	path: '/1/classes/aps?' + post_data,	
-	port: 2337,
-	method: 'POST',
-	headers: {
-		"X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor", 
-		"X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9",
-		}
+	var post_data = querystring.stringify(req.body);
+	var post_options = {
+		hostname: 'http://www.noserv.com',
+		path: '/1/classes/aps?' + post_data,	
+		port: 2337,
+		method: 'POST',
+		headers: {
+			"X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor", 
+			"X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9",
+			}
 	};	
 
 	console.log(post_data);
