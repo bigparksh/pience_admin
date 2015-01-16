@@ -17,11 +17,11 @@
   });
 
   router.put('/api/aps', function(req, res) {
-    noserv.noserv_update_ap(req, res)
+    noserv.noserv_update_ap(req, res);
   });
 
   router.delete('/api/aps/:_id', function(req, res) {
-    noserv.noserv_delete_ap(req, res)
+    noserv.noserv_delete_ap(req, res);
   });
 
   module.exports = router;
