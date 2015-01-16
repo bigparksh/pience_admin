@@ -6,7 +6,7 @@
  var client = require('http');
  var querystring = require('querystring');
  var options = {
-	hostname: 'http://www.noserv.com',
+	hostname: 'www.noserv.com',
 	path: '/1/classes/aps',	
 	port: 2337,
 	headers: {
