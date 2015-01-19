@@ -8,6 +8,10 @@
     res.render('index');
   });
 
+  router.get('/login', function(req, res) {
+    noserv_tenant.login(req, res);
+  });
+
   router.get('/api/aps', function(req, res) {
     noserv_ap.get(res);
   });
