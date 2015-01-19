@@ -3,16 +3,9 @@
  */
 var querystring = require('querystring');
 var client = require('http');
-var options = {
-  hostname: 'www.noserv.com',
-  port: 2337,
-  headers: {
-    "X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor",
-    "X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9"
-  }
-};
 
-exports.noserv_get_aps = (function(res) {
+exports.get = (function(res) {
+  var options = get_options();
   options.method = 'GET';
   options.path = '/1/classes/aps';
 
@@ -28,17 +21,20 @@ exports.noserv_get_aps = (function(res) {
   });
 });
 
-exports.noserv_add_ap = (function(req, res) {
+exports.post = (function(req, res) {
+  var options = get_options();
   options.method = 'POST';
-  options.path += "?" + querystring.stringify(req.body);
+  options.path = '/1/classes/aps?' + querystring.stringify(req.body);
   var self = this;
   client.request(options, function() {
-    self.noserv_get_aps(res);
+    self.get(res);
   }).end();
 });
 
-exports.noserv_update_ap = (function(req, res) {
+exports.update = (function(req, res) {
+  var options = get_options();
   var put_body = JSON.stringify(req.body);
+
   options.path = '/1/classes/aps/' + req.body.objectId;
   options.method = 'PUT';
   options.headers["Content-Type"] = "application/json";
@@ -53,14 +49,15 @@ exports.noserv_update_ap = (function(req, res) {
   put_req.end();
 });
 
-exports.noserv_delete_ap = (function(req, res) {
+exports.delete = (function(req, res) {
+  var options = get_options();
   options.path = '/1/classes/aps/' + req.params._id;
   options.method = 'DELETE';
   options.headers["Content-Type"] = "application/json";
 
   var self = this;
   client.request(options, function() {
-    self.noserv_get_aps(res);
+    self.get(res);
   }).end();
 });
 
@@ -69,4 +66,15 @@ function check_response(status_code, res) {
     res.json("success");
   else
     res.json("fail");
+}
+
+function get_options() {
+  return  {
+    hostname: 'www.noserv.com',
+    port: 2337,
+    headers: {
+      "X-Noserv-Application-Id": "rsnq1adhhj90be29fj6pz6dg6zrdlsor",
+      "X-Noserv-REST-API-Key": "txyewqfpjxvwjyviz3sp1vbm3v5qm2t9"
+    }
+  };
 }

@@ -13,7 +13,7 @@
 <input type="text" class="form-control input-md" placeholder="Enter a Ap address" ng-model="address" >
 </div>
 <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
-<input type="button" class="btn btn-info" value="Save" ng-click="save($event)">
+<input type="button" class="btn btn-info" value="Save" ng-click="save()">
 </div>
 </div>
 <div class="row col-md-12 aps">
@@ -38,7 +38,7 @@
 <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.address}}" ng-model="ap.address">
 </div>
 <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
-<input ng-show="isEditable[$index]" type="button" class="btn btn-danger" value="Update" ng-click="edit($event, $index);">
+<input ng-show="isEditable[$index]" type="button" class="btn btn-danger" value="Update" ng-click="edit($index);">
 <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
 </div>
 <div class="col-md-2 col-sm-2 col-xs-2">

@@ -5,8 +5,9 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	apsFactory.getAp().then(function(res) {
 		$scope.aps = JSON.parse(res.data).results;
 	});
+
 	// Save a Ap to the server
-	$scope.save = function($event) {
+	$scope.save = function() {
 		if ($scope.ssid && $scope.password && $scope.address) {
 			apsFactory.saveAp({
 				"ssid": $scope.ssid,
@@ -27,7 +28,7 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 		}
 	};
 	// Update the edited Ap
-	$scope.edit = function($event, i) {
+	$scope.edit = function(i) {
 			var _t = $scope.aps[i];
 			apsFactory.updateAp({
 				objectId: $scope.aps[i].objectId,
