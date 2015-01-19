@@ -3,6 +3,7 @@
   var express = require('express');
   var router = express.Router();
   var noserv_ap = require('./noserv_ap');
+  var noserv_tenant = require('./noserv_tenant');
 
   router.get('/', function(req, res) {
     res.render('index');

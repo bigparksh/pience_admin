@@ -9,11 +9,14 @@ exports.login = (function(req, res) {
   options.method = 'GET';
   options.path = '/1/login?' + querystring.stringify(req.body);
 
+  console.log(options.path);
   var buffer = '';
   client.get(options, function(result) {
     result.setEncoding('utf8');
     result.on('data', function(chunk) {
       buffer += chunk.toString();
+      console.log(buffer);
+
     });
     result.on('end', function() {
       res.render('index');
