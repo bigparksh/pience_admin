@@ -43,7 +43,7 @@
                         <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.password}}" ng-model="ap.password">
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-3">
-                        <span ng-show="!isEditable[$index]">{{ap.address}}</span>
+                        <span ng-show="!isEditable[$index]">{{ap.address}} ({{ap.latitude}}, {{ap.longitude}})</span>
                         <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.address}}" ng-model="ap.address">
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
