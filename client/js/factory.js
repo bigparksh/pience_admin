@@ -55,7 +55,7 @@ admin.constant('AUTH_EVENTS', {
   sessionTimeout: 'auth-session-timeout',
   notAuthenticated: 'auth-not-authenticated',
   notAuthorized: 'auth-not-authorized'
-})
+});
 
 admin.factory('AuthInterceptor', function ($rootScope, $q,
                                             AUTH_EVENTS) {
@@ -70,4 +70,4 @@ admin.factory('AuthInterceptor', function ($rootScope, $q,
       return $q.reject(response);
     }
   };
-})
+});

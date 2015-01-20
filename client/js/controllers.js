@@ -68,19 +68,6 @@ admin.controller('ApplicationCtrl', function($scope, authService) {
   $scope.setCurrentUser = function(user) {
     $scope.currentUser = user;
   };
-}).run(function ($rootScope, AUTH_EVENTS, authService) {
-  $rootScope.$on('$stateChangeStart', function (event) {
-    if (!authService.isAuthorized()) {
-      event.preventDefault();
-      if (authService.isAuthenticated()) {
-        // user is not allowed
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-      } else {
-        // user is not logged in
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-      }
-    }
-  });
 });
 
 admin.controller('LoginCtrl', function($scope, authService) {

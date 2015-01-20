@@ -3,6 +3,7 @@
         <div class="container text-right">
             <form name="loginForm" ng-controller="LogoutCtrl"
                   ng-submit="logout()" novalidate>
+                <span> {{currentUser.username}} </span>
                 <button type="submit">LogOut</button>
             </form>
         </div>

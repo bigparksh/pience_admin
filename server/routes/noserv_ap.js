@@ -3,6 +3,30 @@
  */
 var querystring = require('querystring');
 var client = require('http');
+var xml2js = require('xml2js');
+
+exports.get_geo = (function(address, coordinate) {
+  var buffer = '';
+  var options = {
+    hostname: 'openapi.map.naver.com',
+    path: '/api/geocode.php?key=6abb24d627bc8cfb0ea8059688de4095&encoding=utf-8&coord=tm128&query=' + address
+  };
+
+  client.get(options, function (result) {
+    result.setEncoding('utf8');
+    result.on('data', function (chunk) {
+      buffer += chunk.toString();
+    });
+
+    result.on('end', function () {
+      var parser = new xml2js.Parser();
+      parser.parseString(buffer, function (err, res) {
+        coordinate.latitude = res["geocode"]["item"][0]["point"][0]["x"][0];
+        coordinate.longitude = res["geocode"]["item"][0]["point"][0]["y"][0];
+      });
+    });
+  });
+});
 
 exports.get = (function(res) {
   var options = get_options();
@@ -21,11 +45,19 @@ exports.get = (function(res) {
   });
 });
 
+
 exports.post = (function(req, res) {
   var options = get_options();
-  options.method = 'POST';
-  options.path = '/1/classes/aps?' + querystring.stringify(req.body);
   var self = this;
+  var coordinate = {};
+
+  self.get_geo(req.body.address, coordinate);
+
+  console.log(coordinate);
+  options.method = 'POST';
+  options.path = '/1/classes/aps?' + querystring.stringify(req.body)
+    + "&latitude=" + coordinate.latitude + '&longitude=' + coordinate.longitude;
+
   client.request(options, function() {
     self.get(res);
   }).end();
@@ -48,6 +80,7 @@ exports.update = (function(req, res) {
   put_req.write(put_body);
   put_req.end();
 });
+
 
 exports.delete = (function(req, res) {
   var options = get_options();
@@ -78,3 +111,4 @@ function get_options() {
     }
   };
 }
+
