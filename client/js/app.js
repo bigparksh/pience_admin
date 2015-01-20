@@ -8,8 +8,8 @@ admin = angular.module('admin', ['ngRoute'])
       templateUrl: '/partials/ap.html',
       controller: 'ApCtrl'
 	  }).otherwise({
-		  redirectTo: '/'
-	  });
+        redirectTo: '/'
+      });
 }).constant('AUTH_EVENTS', {
     loginSuccess: 'auth-login-success',
     loginFailed: 'auth-login-failed',

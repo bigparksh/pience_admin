@@ -9,7 +9,7 @@
     res.render('index');
   });
 
-  router.get('/login', function(req, res) {
+  router.post('/login', function(req, res) {
     noserv_tenant.login(req, res);
   });
 

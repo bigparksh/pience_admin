@@ -24,11 +24,13 @@ admin.factory('apsFactory', function($http) {
 
   authService.login = function (credentials) {
     return $http
-      .get('/login', credentials)
+    .post('/login?', credentials)
       .then(function (res) {
-        Session.create(res.data.id, res.data.user.id,
-          res.data.user.role);
-        return res.data.user;
+        var user = JSON.parse(res.data);
+        alert(user.sessionToken);
+        Session.create(user.sessionToken, user.username,
+          'admin');
+        return user;
       });
   };
 

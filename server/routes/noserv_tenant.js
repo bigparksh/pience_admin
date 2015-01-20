@@ -15,11 +15,9 @@ exports.login = (function(req, res) {
     result.setEncoding('utf8');
     result.on('data', function(chunk) {
       buffer += chunk.toString();
-      console.log(buffer);
-
     });
     result.on('end', function() {
-      res.render('index');
+      res.json(buffer);
     });
   });
 });
