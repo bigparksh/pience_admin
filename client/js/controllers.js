@@ -1,6 +1,11 @@
-admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
+admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService) {
 	$scope.aps = [];
 	$scope.isEditable = [];
+
+  $scope.credentials = {
+    username: '',
+    password: ''
+  };
 	// get all Aps on Load
 	apsFactory.getAp().then(function(res) {
 		$scope.aps = JSON.parse(res.data).results;
@@ -54,29 +59,44 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
         $scope.aps = JSON.parse(res.data).results;
 		});
 	};
-});
-admin.controller('LoginCtrl', function($scope, $rootScope, AUTH_EVENTS, AuthService) {
-  $scope.credentials = {
-    username: '',
-    password: ''
-  };
-  $scope.login = function (credentials) {
-    AuthService.login(credentials).then(function (user) {
-      $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-      $scope.setCurrentUser(user);
-    }, function () {
-      $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-    });
-  };
-});
-admin.controller('ApplicationController', function ($scope,
-                                                    USER_ROLES,
-                                                    AuthService) {
-  $scope.currentUser = null;
-  $scope.userRoles = USER_ROLES;
-  $scope.isAuthorized = AuthService.isAuthorized;
 
-  $scope.setCurrentUser = function (user) {
+});
+
+admin.controller('ApplicationCtrl', function($scope, authService) {
+  $scope.currentUser = null;
+  $scope.isAuthorized = authService.isAuthorized;
+  $scope.setCurrentUser = function(user) {
     $scope.currentUser = user;
   };
-})
+}).run(function ($rootScope, AUTH_EVENTS, authService) {
+  $rootScope.$on('$stateChangeStart', function (event) {
+    if (!authService.isAuthorized()) {
+      event.preventDefault();
+      if (authService.isAuthenticated()) {
+        // user is not allowed
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+      } else {
+        // user is not logged in
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+      }
+    }
+  });
+});
+
+admin.controller('LoginCtrl', function($scope, authService) {
+  $scope.currentUser = null;
+
+  $scope.login = function (credentials) {
+    authService.login(credentials).then(function (user) {
+      if(user.sessionToken)
+        $scope.setCurrentUser(user);
+    });
+  };
+
+});
+
+admin.controller('LogoutCtrl', function($scope, authService) {
+  $scope.logout = function() {
+    authService.logout();
+  };
+});
