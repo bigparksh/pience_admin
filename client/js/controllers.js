@@ -19,7 +19,8 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 				"bssid": $scope.bssid,
 				"password": $scope.password,
 				"address": $scope.address,
-				"objectId": $scope.objectId
+				"objectId": $scope.objectId,
+				"userId": $scope.currentUser.objectId
 			}).then(function(res) {
 				$scope.aps = JSON.parse(res.data).results;
 			});
