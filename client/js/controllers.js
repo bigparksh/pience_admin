@@ -32,6 +32,7 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 			alert('Please put valid value');
 		}
 	};
+
 	// Update the edited Ap
 	$scope.edit = function(i) {
 			apsFactory.updateAp({
@@ -41,15 +42,12 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 				password: $scope.aps[i].password,
 				address: $scope.aps[i].address
 			}).then(function(res) {
-					if (res.data == "fail") {
-            alert("something goes wrong!");
-					} else {
-            $scope.isEditable[i] = false;
-            $scope.aps[i].longitude = res.data.longitude;
-            $scope.aps[i].latitude = res.data.latitude;
-					}
+        $scope.isEditable[i] = false;
+        $scope.aps[i].longitude = res.data.longitude;
+        $scope.aps[i].latitude = res.data.latitude;
 			});
 	};
+
 	// Delete a Ap
 	$scope.delete = function(i) {
 		apsFactory.deleteAp($scope.aps[i].objectId).then(function(res) {

@@ -9,7 +9,7 @@ exports.get_geo = (function(address, callback) {
   var buffer = '';
   var options = {
     hostname: 'openapi.map.naver.com',
-    path: '/api/geocode.php?key=6abb24d627bc8cfb0ea8059688de4095&encoding=utf-8&coord=tm128&query=' +
+    path: '/api/geocode.php?key=6abb24d627bc8cfb0ea8059688de4095&encoding=utf-8&coord=latlng&query=' +
       require('querystring').escape(address)
   };
   var coordinate = {};
@@ -22,8 +22,14 @@ exports.get_geo = (function(address, callback) {
     result.on('end', function () {
       var parser = new xml2js.Parser();
       parser.parseString(buffer, function (err, res) {
-        coordinate.latitude = res.geocode.item[0].point[0].x[0];
-        coordinate.longitude = res.geocode.item[0].point[0].y[0];
+        if (res.geocode.item) {
+          coordinate.latitude = parseFloat(res.geocode.item[0].point[0].x[0]);
+          coordinate.longitude = parseFloat(res.geocode.item[0].point[0].y[0]);
+        } else {
+          console.log("Invalid address: " + address);
+          coordinate.latitude = 0.0;
+          coordinate.longitude = 0.0;
+        }
         return callback(coordinate);
       });
     });
@@ -31,12 +37,8 @@ exports.get_geo = (function(address, callback) {
 });
 
 exports.get = (function(res) {
-  var options = get_options();
-  options.method = 'GET';
-  options.path = '/1/classes/aps';
-
   var buffer = '';
-  client.get(options, function(result) {
+  client.get(set_options('GET', '/1/classes/aps', null), function(result) {
     result.setEncoding('utf8');
     result.on('data', function(chunk) {
       buffer += chunk.toString();
@@ -48,61 +50,39 @@ exports.get = (function(res) {
 });
 
 exports.post = (function(req, res) {
-  var options = get_options();
   var self = this;
-  options.method = 'POST';
-
   self.get_geo(req.body.address, function(coordinate) {
-    options.path = '/1/classes/aps?' + querystring.stringify(req.body)
-      + "&latitude=" + coordinate.latitude + '&longitude=' + coordinate.longitude;
-    client.request(options, function() {
-      self.get(res);
-    }).end();
+    var map = set_body(req.body, coordinate);
+    var request =
+      client.request(set_options('POST', '/1/classes/aps', map), function() {
+        self.get(res);
+      });
+    request.write(map);
+    request.end();
   });
 });
 
-exports.update = (function(req, res) {
-  var options = get_options();
-
+exports.modify = (function(req, res) {
   var self = this;
   self.get_geo(req.body.address, function(coordinate) {
-    req.body.longitude = coordinate.longitude;
-    req.body.latitude = coordinate.latitude;
-
-    var put_body = JSON.stringify(req.body);
-
-    console.log(put_body);
-    options.path = '/1/classes/aps/' + req.body.objectId;
-    options.method = 'PUT';
-    options.headers["Content-Type"] = "application/json";
-    options.headers["Content-Length"] = Buffer.byteLength(put_body);
-    var put_req = client.request(options, function(result) {
-      result.on('data', function() {
-        if (result.statusCode == "200") {
-          res.json(coordinate); //새로 갱신된 좌표를 클라이언트에 전송
-        } else
-          res.json("fail");
+    var map = set_body(req.body, coordinate);
+    var request =
+      client.request(set_options('PUT', '/1/classes/aps/' + req.body.objectId, map), function() {
+        res.json(coordinate);
       });
-    });
-
-    put_req.write(put_body);
-    put_req.end();
+    request.write(map);
+    request.end();
   });
 });
 
 exports.delete = (function(req, res) {
-  var options = get_options();
-  options.path = '/1/classes/aps/' + req.params._id;
-  options.method = 'DELETE';
-  options.headers["Content-Type"] = "application/json";
-
   var self = this;
-  client.request(options, function() {
+  client.request(set_options('DELETE', '/1/classes/aps/' + req.params._id, null), function() {
     self.get(res);
   }).end();
 });
 
-function get_options() {
+function default_option() {
   return  {
     hostname: 'www.noserv.com',
     port: 2337,
@@ -113,3 +93,19 @@ function get_options() {
   };
 }
 
+function set_options(method, path, body) {
+  var options = default_option();
+  options.method = method;
+  options.path = path;
+  options.headers["Content-Type"] = "application/json";
+  if (body)
+    options.headers["Content-Length"] = Buffer.byteLength(body);
+  return options;
+}
+
+function set_body(base_body, coordinate){
+  var map = base_body;
+  map.longitude = coordinate.longitude;
+  map.latitude = coordinate.latitude;
+  return JSON.stringify(map);
+}

@@ -22,7 +22,7 @@
   });
 
   router.put('/api/aps', function(req, res) {
-    noserv_ap.update(req, res);
+    noserv_ap.modify(req, res);
   });
 
   router.delete('/api/aps/:_id', function(req, res) {

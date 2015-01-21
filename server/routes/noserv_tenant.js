@@ -33,13 +33,6 @@ exports.signup = (function(req, res) {
   }).end();
 });
 
-function check_response(status_code, res) {
-  if(status_code == "200")
-    res.json("success");
-  else
-    res.json("fail");
-}
-
 function get_options() {
   return  {
     hostname: 'www.noserv.com',
