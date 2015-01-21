@@ -28,4 +28,4 @@ admin.config(function ($httpProvider) {
       return $injector.get('AuthInterceptor');
     }
   ]);
-})
+});

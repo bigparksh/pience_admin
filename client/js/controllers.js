@@ -34,22 +34,19 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 	};
 	// Update the edited Ap
 	$scope.edit = function(i) {
-			var _t = $scope.aps[i];
 			apsFactory.updateAp({
 				objectId: $scope.aps[i].objectId,
 				ssid: $scope.aps[i].ssid,
 				bssid: $scope.aps[i].bssid,
 				password: $scope.aps[i].password,
 				address: $scope.aps[i].address
-			}).then(function(data) {
-					if (data.data == "success") {
-						$scope.isEditable[i] = false;
-						_t.ssid = $scope.aps[i].ssid;
-						_t.bssid = $scope.aps[i].bssid;
-						_t.password = $scope.aps[i].password;
-						_t.address = $scope.aps[i].address;
+			}).then(function(res) {
+					if (res.data == "fail") {
+            alert("something goes wrong!");
 					} else {
-						alert("something goes wrong!");
+            $scope.isEditable[i] = false;
+            $scope.aps[i].longitude = res.data.longitude;
+            $scope.aps[i].latitude = res.data.latitude;
 					}
 			});
 	};

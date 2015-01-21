@@ -9,7 +9,8 @@ exports.get_geo = (function(address, callback) {
   var buffer = '';
   var options = {
     hostname: 'openapi.map.naver.com',
-    path: '/api/geocode.php?key=6abb24d627bc8cfb0ea8059688de4095&encoding=utf-8&coord=tm128&query=' + address
+    path: '/api/geocode.php?key=6abb24d627bc8cfb0ea8059688de4095&encoding=utf-8&coord=tm128&query=' +
+      require('querystring').escape(address)
   };
   var coordinate = {};
   client.get(options, function (result) {
@@ -21,8 +22,8 @@ exports.get_geo = (function(address, callback) {
     result.on('end', function () {
       var parser = new xml2js.Parser();
       parser.parseString(buffer, function (err, res) {
-        coordinate.latitude = res["geocode"]["item"][0]["point"][0]["x"][0];
-        coordinate.longitude = res["geocode"]["item"][0]["point"][0]["y"][0];
+        coordinate.latitude = res.geocode.item[0].point[0].x[0];
+        coordinate.longitude = res.geocode.item[0].point[0].y[0];
         return callback(coordinate);
       });
     });
@@ -46,7 +47,6 @@ exports.get = (function(res) {
   });
 });
 
-
 exports.post = (function(req, res) {
   var options = get_options();
   var self = this;
@@ -63,22 +63,32 @@ exports.post = (function(req, res) {
 
 exports.update = (function(req, res) {
   var options = get_options();
-  var put_body = JSON.stringify(req.body);
 
-  options.path = '/1/classes/aps/' + req.body.objectId;
-  options.method = 'PUT';
-  options.headers["Content-Type"] = "application/json";
-  options.headers["Content-Length"] = Buffer.byteLength(put_body);
-  var put_req = client.request(options, function(result) {
-    result.on('data', function() {
-      check_response(result.statusCode, res);
+  var self = this;
+  self.get_geo(req.body.address, function(coordinate) {
+    req.body.longitude = coordinate.longitude;
+    req.body.latitude = coordinate.latitude;
+
+    var put_body = JSON.stringify(req.body);
+
+    console.log(put_body);
+    options.path = '/1/classes/aps/' + req.body.objectId;
+    options.method = 'PUT';
+    options.headers["Content-Type"] = "application/json";
+    options.headers["Content-Length"] = Buffer.byteLength(put_body);
+    var put_req = client.request(options, function(result) {
+      result.on('data', function() {
+        if (result.statusCode == "200") {
+          res.json(coordinate); //새로 갱신된 좌표를 클라이언트에 전송
+        } else
+          res.json("fail");
+      });
     });
+
+    put_req.write(put_body);
+    put_req.end();
   });
-
-  put_req.write(put_body);
-  put_req.end();
 });
-
 
 exports.delete = (function(req, res) {
   var options = get_options();
@@ -91,13 +101,6 @@ exports.delete = (function(req, res) {
     self.get(res);
   }).end();
 });
-
-function check_response(status_code, res) {
-  if(status_code == "200")
-    res.json("success");
-  else
-    res.json("fail");
-}
 
 function get_options() {
   return  {
