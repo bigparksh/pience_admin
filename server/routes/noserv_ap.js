@@ -36,7 +36,7 @@ exports.get_geo = (function(address, callback) {
   });
 });
 
-exports.get = (function(res) {
+exports.get = (function(req, res) {
   var buffer = '';
   client.get(set_options('GET', '/1/classes/aps', null), function(result) {
     result.setEncoding('utf8');
@@ -55,7 +55,7 @@ exports.post = (function(req, res) {
     var map = set_body(req.body, coordinate);
     var request =
       client.request(set_options('POST', '/1/classes/aps', map), function() {
-        self.get(res);
+        self.get(req, res);
       });
     request.write(map);
     request.end();
@@ -78,7 +78,7 @@ exports.modify = (function(req, res) {
 exports.delete = (function(req, res) {
   var self = this;
   client.request(set_options('DELETE', '/1/classes/aps/' + req.params._id, null), function() {
-    self.get(res);
+    self.get(req, res);
   }).end();
 });
 

@@ -20,7 +20,7 @@
   router.get('/aps', function(req, res) {
     console.log(req.session.userName);
     if (req.session.userName) {
-      noserv_ap.get(res);
+      noserv_ap.get(req, res);
     } else {
       res.json("null");
     }

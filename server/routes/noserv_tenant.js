@@ -15,6 +15,7 @@ exports.login = (function(req, res) {
       if (result.statusCode == '200') {
         var user = JSON.parse(buffer);
         req.session.userName = user.username;
+        req.session.userId = user.objectId;
         req.session.secret = user.sessionToken;
         res.json(buffer);
       }

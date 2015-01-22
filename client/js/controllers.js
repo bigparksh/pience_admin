@@ -8,12 +8,21 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
   };
 
 	// get all Aps on Load
-	apsFactory.getAp().then(function(res) {
-    var data = JSON.parse(res.data);
-    $scope.aps = data ? data.results : null;
-	});
 
-	// Save a Ap to the server
+  $scope.get_aps = function() {
+    apsFactory.getAp().then(function (res) {
+      var data = JSON.parse(res.data);
+      if (data) {
+        $scope.currentUser = data.session;
+        $scope.aps = data.results;
+      } else {
+        $scope.aps = null;
+      }
+    });
+  };
+
+
+  // Save a Ap to the server
 	$scope.save = function() {
 		if ($scope.ssid && $scope.password && $scope.address) {
 			apsFactory.saveAp({
@@ -57,21 +66,20 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 		});
 	};
 
-  $scope.setCurrentUser = function(user) {
-    $scope.currentUser = user;
-  };
+  $scope.get_aps();
+
 });
 
-admin.controller('UserCtrl', function($scope, userFactory) {
+admin.controller('UserCtrl', function($rootScope, $scope, userFactory) {
   $scope.login = function (credentials) {
-    userFactory.login(credentials).then(function(res) {
-      $scope.setCurrentUser(JSON.parse(res.data));
+    userFactory.login(credentials).then(function() {
+      $scope.get_aps();
     });
   };
 
   $scope.logout = function () {
     userFactory.logout().then(function() {
-      $scope.setCurrentUser(null);
+      $scope.get_aps();
     });
   };
 });

@@ -29,7 +29,7 @@ admin.factory('userFactory', function($http) {
   };
 
   _userService.logout = function() {
-    $http.post('/logout');
+    return $http.post('/logout');
   };
 
   return _userService;
