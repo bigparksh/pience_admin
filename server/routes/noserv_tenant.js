@@ -12,9 +12,19 @@ exports.login = (function(req, res) {
       buffer += chunk.toString();
     });
     result.on('end', function() {
-      res.json(buffer);
+      if (result.statusCode == '200') {
+        var user = JSON.parse(buffer);
+        req.session.userName = user.username;
+        req.session.secret = user.sessionToken;
+        res.json(buffer);
+      }
     });
   });
+});
+
+exports.logout = (function(req, res) {
+  req.session.destroy();
+  res.json("logged_out");
 });
 
 exports.signup = (function(req, res) {

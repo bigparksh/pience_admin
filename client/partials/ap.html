@@ -1,50 +1,73 @@
 <div class="container" ng-controller="ApCtrl">
-            <div class="row col-md-12">
+    <div class="container" ng-if="aps">
+        <div class="container text-right">
+            <form name="loginForm" ng-controller="UserCtrl"
+                  ng-submit="logout()" novalidate>
+                <span> {{currentUser.userName}}</span>
+                <button type="submit">LogOut</button>
+            </form>
+        </div>
+        <div class="container" ng-controller="ApCtrl">
+        <div class="row col-md-12">
+            <div class="col-md-2 col-sm-2 col-xs-2">
+                <input type="text" class="form-control input-md" placeholder="Enter a SSID" ng-model="ssid">
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <input type="text" class="form-control input-md" placeholder="Enter a BSSID" ng-model="bssid">
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-2">
+                <input type="text" class="form-control input-md" placeholder="Enter a Ap password" ng-model="password" >
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <input type="text" class="form-control input-md" placeholder="Enter a Ap address" ng-model="address" >
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
+                <input type="button" class="btn btn-info" value="Save" ng-click="save()">
+            </div>
+        </div>
+        <div class="row col-md-12 aps">
+            <div class="alert alert-info text-center" ng-hide="aps.length > 0">
+                <h3>No Aps yet!</h3>
+            </div>
+            <div ng-repeat="ap in aps" class="ap col-md-12 col-sm-12 col-xs-12">
                 <div class="col-md-2 col-sm-2 col-xs-2">
-                    <input type="text" class="form-control input-md" placeholder="Enter a SSID" ng-model="ssid">
+                    <span ng-show="!isEditable[$index]">{{ap.ssid}}</span>
+                    <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.ssid}}" ng-model="ap.ssid">
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-3">
-                    <input type="text" class="form-control input-md" placeholder="Enter a BSSID" ng-model="bssid">
+                    <span ng-show="!isEditable[$index]">{{ap.bssid}}</span>
+                    <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.bssid}}" ng-model="ap.bssid">
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-2">
-                    <input type="text" class="form-control input-md" placeholder="Enter a Ap password" ng-model="password" >
+                    <span ng-show="!isEditable[$index]">{{ap.password}}</span>
+                    <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.password}}" ng-model="ap.password">
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-3">
-                    <input type="text" class="form-control input-md" placeholder="Enter a Ap address" ng-model="address" >
+                    <span ng-show="!isEditable[$index]">{{ap.address}} ({{ap.latitude}}, {{ap.longitude}})</span>
+                    <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.address}}" ng-model="ap.address">
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
-                    <input type="button" class="btn btn-info" value="Save" ng-click="save()">
+                    <input ng-show="isEditable[$index]" type="button" class="btn btn-danger" value="Update" ng-click="edit($index);">
+                    <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input ng-show="!isEditable[$index]" type="button" class="btn btn-info" ng-disabled="ap.isCompleted" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
+                    <input ng-show="!isEditable[$index]" type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
                 </div>
             </div>
-            <div class="row col-md-12 aps">
-                <div class="alert alert-info text-center" ng-hide="aps.length > 0">
-                    <h3>No Aps yet!</h3>
-                </div>
-                <div ng-repeat="ap in aps" class="ap col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-md-2 col-sm-2 col-xs-2">
-                        <span ng-show="!isEditable[$index]">{{ap.ssid}}</span>
-                        <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.ssid}}" ng-model="ap.ssid">
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-3">
-                        <span ng-show="!isEditable[$index]">{{ap.bssid}}</span>
-                        <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.bssid}}" ng-model="ap.bssid">
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-2">
-                        <span ng-show="!isEditable[$index]">{{ap.password}}</span>
-                        <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.password}}" ng-model="ap.password">
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-3">
-                        <span ng-show="!isEditable[$index]">{{ap.address}} ({{ap.latitude}}, {{ap.longitude}})</span>
-                        <input class="form-control input-md" ng-show="isEditable[$index]" type="text" value="{{ap.address}}" ng-model="ap.address">
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-2 pull-right">
-                        <input ng-show="isEditable[$index]" type="button" class="btn btn-danger" value="Update" ng-click="edit($index);">
-                        <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-2">
-                        <input ng-show="!isEditable[$index]" type="button" class="btn btn-info" ng-disabled="ap.isCompleted" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
-                        <input ng-show="!isEditable[$index]" type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
-                    </div>
-                </div>
-            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="container" ng-if="!aps">
+    <form name="loginForm" ng-controller="UserCtrl"
+          ng-submit="login(credentials)" novalidate>
+        <label for="username">Username:</label>
+        <input type="text" id="username"
+               ng-model="credentials.username">
+        <label for="password">Password:</label>
+        <input type="password" id="password"
+               ng-model="credentials.password">
+        <button type="submit">Login</button>
+    </form>
 </div>

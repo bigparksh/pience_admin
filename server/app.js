@@ -6,7 +6,7 @@
  var logger = require('morgan');
  var cookieParser = require('cookie-parser');
  var bodyParser = require('body-parser');
-
+ var session = require('express-session');
  var routes = require('./routes/index');
 
  var app = express();
@@ -16,6 +16,7 @@
  app.engine('html', require('ejs').renderFile);
  app.set('view engine', 'html');
 
+ app.use(session({secret:'something'}));
  app.use(logger('dev'));
  app.use(bodyParser.json());
  app.use(bodyParser.urlencoded({
@@ -34,5 +35,4 @@
  });
 
 	module.exports = app;
-
 }());

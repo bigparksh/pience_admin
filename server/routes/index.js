@@ -13,19 +13,28 @@
     noserv_tenant.login(req, res);
   });
 
-  router.get('/api/aps', function(req, res) {
-    noserv_ap.get(res);
+  router.post('/logout', function(req, res) {
+    noserv_tenant.logout(req, res);
   });
 
-  router.post('/api/aps', function(req, res) {
+  router.get('/aps', function(req, res) {
+    console.log(req.session.userName);
+    if (req.session.userName) {
+      noserv_ap.get(res);
+    } else {
+      res.json("null");
+    }
+  });
+
+  router.post('/aps', function(req, res) {
     noserv_ap.post(req, res);
   });
 
-  router.put('/api/aps', function(req, res) {
+  router.put('/aps', function(req, res) {
     noserv_ap.modify(req, res);
   });
 
-  router.delete('/api/aps/:_id', function(req, res) {
+  router.delete('/aps/:_id', function(req, res) {
     noserv_ap.delete(req, res);
   });
 

@@ -6,9 +6,11 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
     username: '',
     password: ''
   };
+
 	// get all Aps on Load
 	apsFactory.getAp().then(function(res) {
-		$scope.aps = JSON.parse(res.data).results;
+    var data = JSON.parse(res.data);
+    $scope.aps = data ? data.results : null;
 	});
 
 	// Save a Ap to the server
@@ -55,4 +57,21 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 		});
 	};
 
+  $scope.setCurrentUser = function(user) {
+    $scope.currentUser = user;
+  };
+});
+
+admin.controller('UserCtrl', function($scope, userFactory) {
+  $scope.login = function (credentials) {
+    userFactory.login(credentials).then(function(res) {
+      $scope.setCurrentUser(JSON.parse(res.data));
+    });
+  };
+
+  $scope.logout = function () {
+    userFactory.logout().then(function() {
+      $scope.setCurrentUser(null);
+    });
+  };
 });

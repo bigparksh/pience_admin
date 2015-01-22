@@ -1,5 +1,5 @@
 admin.factory('apsFactory', function($http) {
-	var urlBase = '/api/aps';
+	var urlBase = '/aps';
 	var _apService = {};
 
 	_apService.getAp = function() {
@@ -19,4 +19,18 @@ admin.factory('apsFactory', function($http) {
 	};
 
 	return _apService;
+});
+
+admin.factory('userFactory', function($http) {
+  var _userService = {};
+
+  _userService.login = function(credentials) {
+    return $http.post('/login', credentials);
+  };
+
+  _userService.logout = function() {
+    $http.post('/logout');
+  };
+
+  return _userService;
 });
