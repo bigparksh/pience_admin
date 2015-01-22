@@ -1,4 +1,4 @@
-admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService) {
+admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	$scope.aps = [];
 	$scope.isEditable = [];
 
@@ -19,8 +19,7 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 				"bssid": $scope.bssid,
 				"password": $scope.password,
 				"address": $scope.address,
-				"objectId": $scope.objectId,
-				"userId": $scope.currentUser.objectId
+				"objectId": $scope.objectId
 			}).then(function(res) {
 				$scope.aps = JSON.parse(res.data).results;
 			});
@@ -56,30 +55,4 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory, authService)
 		});
 	};
 
-});
-
-admin.controller('ApplicationCtrl', function($scope, authService) {
-  $scope.currentUser = null;
-  $scope.isAuthorized = authService.isAuthorized;
-  $scope.setCurrentUser = function(user) {
-    $scope.currentUser = user;
-  };
-});
-
-admin.controller('LoginCtrl', function($scope, authService) {
-  $scope.currentUser = null;
-
-  $scope.login = function (credentials) {
-    authService.login(credentials).then(function (user) {
-      if(user.sessionToken)
-        $scope.setCurrentUser(user);
-    });
-  };
-
-});
-
-admin.controller('LogoutCtrl', function($scope, authService) {
-  $scope.logout = function() {
-    authService.logout();
-  };
 });

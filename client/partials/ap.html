@@ -1,13 +1,4 @@
-<div class="container" ng-controller="ApplicationCtrl">
-    <div ng-if="isAuthorized()">
-        <div class="container text-right">
-            <form name="loginForm" ng-controller="LogoutCtrl"
-                  ng-submit="logout()" novalidate>
-                <span> {{currentUser.username}} </span>
-                <button type="submit">LogOut</button>
-            </form>
-        </div>
-        <div class="container" ng-controller="ApCtrl">
+<div class="container" ng-controller="ApCtrl">
             <div class="row col-md-12">
                 <div class="col-md-2 col-sm-2 col-xs-2">
                     <input type="text" class="form-control input-md" placeholder="Enter a SSID" ng-model="ssid">
@@ -56,18 +47,4 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div ng-if="!isAuthorized()">
-        <form name="loginForm" ng-controller="LoginCtrl"
-              ng-submit="login(credentials)" novalidate>
-            <label for="username">Username:</label>
-            <input type="text" id="username"
-                   ng-model="credentials.username">
-            <label for="password">Password:</label>
-            <input type="password" id="password"
-                   ng-model="credentials.password">
-            <button type="submit">Login</button>
-        </form>
-    </div>
 </div>
