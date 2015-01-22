@@ -2,14 +2,15 @@ admin.controller('ApCtrl', function($rootScope, $scope, apsFactory) {
 	$scope.aps = [];
 	$scope.isEditable = [];
 
-  $scope.credentials = {
-    username: '',
-    password: ''
-  };
 
 	// get all Aps on Load
 
   $scope.get_aps = function() {
+    $scope.credentials = {
+      username: '',
+      password: ''
+    };
+
     apsFactory.getAp().then(function (res) {
       var data = JSON.parse(res.data);
       if (data) {

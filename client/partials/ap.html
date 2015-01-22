@@ -1,13 +1,14 @@
 <div class="container" ng-controller="ApCtrl">
+    <div class="container text-right" ng-if="aps">
+        <form name="logoutForm" ng-controller="UserCtrl"
+              ng-submit="logout()" novalidate>
+            <span> {{currentUser.username}}</span>
+            <button type="submit">LogOut</button>
+        </form>
+    </div>
     <div class="container" ng-if="aps">
         <div class="container" ng-controller="ApCtrl">
-            <div class="container text-right">
-                <form name="logoutForm" ng-controller="UserCtrl"
-                      ng-submit="logout()" novalidate>
-                    <span> {{currentUser.username}}</span>
-                    <button type="submit">LogOut</button>
-                </form>
-            </div>
+
         <div class="row col-md-12">
             <div class="col-md-2 col-sm-2 col-xs-2">
                 <input type="text" class="form-control input-md" placeholder="Enter a SSID" ng-model="ssid">
